@@ -14,26 +14,36 @@ public class GuessTheNumber {
 
     public void runGame() {
         while (running) {
+
+            System.out.println(tries);
             random = (int) Math.floor(Math.random() * (max - min + 1) + min);
             startGame();
             if (startIntroPhase()) {
                 while (tries < 6) {
                     if (startGuessPhase()) {
                         if (checkGuess(guess)) {
+                            tries = tries + 1;
                             if (victoryPhase(tries, scanner, name)) {
-                                continue;
+                                break;
                             } else {
+                                running = false;
                                 break;
                             }
                         } else {
+                            tries = tries + 1;
                             continue;
                         }
                     } else {
                         continue;
                     }
+
                 }
             } else {
                 continue;
+            }
+            if (tries == 6) {
+                System.out.println("Sorry, you've run out of guesses. Thanks for playing!");
+                running = false;
             }
         }
 
@@ -70,21 +80,15 @@ public class GuessTheNumber {
     }
 
     public boolean checkGuess(int guess) {
+        boolean result = false;
         if (guess == random) {
-            tries++;
-            return true;
+            result = true;
         } else if (guess < random) {
-            tries++;
             System.out.println("Your guess is too low");
-            return false;
         } else if (guess > random) {
-            tries++;
             System.out.println("Your guess is too high.");
-            return false;
-        }else if(tries == 6){
-            running = false;
         }
-        return false;
+        return result;
     }
 
     public boolean victoryPhase(int tries, Scanner scanner, String name) {
@@ -102,7 +106,7 @@ public class GuessTheNumber {
                 //startOver = true;
 //                    break;
             } else if (restart.equals("n")) {
-                running = false;
+                restartGame = false;
 //                    startOver = false;
 //                running = false;
 //                    break;
@@ -114,6 +118,7 @@ public class GuessTheNumber {
         } catch (Exception e) {
             System.out.println("invalid response");
             scanner.nextLine();
+
 //                continue;
         }
 
